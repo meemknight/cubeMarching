@@ -10,7 +10,7 @@
 
 #include "ShaderProgram.h"
 #include "Camera.h"
-
+#include "worldControll.h"
 
 int main()
 {
@@ -37,23 +37,14 @@ int main()
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	ShaderProgram program{"vert.vert", "geometry.geom","frag.frag"};
-	 
-	GLuint id;
-	float data[] =
-	{
-		0.0f, 1.f, -1.f,
-		//1, 0, 0,
-		-1.f, -1.f, -1.f,
-		//0, 1, 0,
-		1.f, -1.f, -1.f,
-		//0, 0, 1,
-	};
-	glGenBuffers(1, &id);
-	glBindBuffer(GL_ARRAY_BUFFER, id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, 0, 0, 0);
-	glEnableVertexAttribArray(0);
+	World3d world;
+	world.scale = 1;
+	world.create(150, 150, 150);
+	world.popultate(circleFunctionCreator(10, 70, 70, 70));
+	world.calculateGpuData();
+	world.bind();
+
 
 	//glVertexAttribPointer(1, 3, GL_FLOAT, 0, 0, (void*)3);
 	//glEnableVertexAttribArray(1);
@@ -65,6 +56,7 @@ int main()
 	float deltaTime = 0;
 	float lastTime = GetTickCount();
 	float cameraSpeed = 0.5f;
+
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -104,13 +96,14 @@ int main()
 
 		camera.mouseUpdate({ cursorPos.x - windowRect.top, cursorPos.y - windowRect.left});
 		
-		glBindBuffer(GL_ARRAY_BUFFER, id);
+		world.bind();
 		program.bind();
 		auto uniformId = program.getUniformLocation("modelToWorldToview");
 		glUniformMatrix4fv(uniformId, 1, false, &camera.getProjectionViewMatrix()[0][0]);
 
+		program.uniform("u_color", 0, 0.5, 0.2, 1);
 
-		glDrawArrays(GL_POINTS, 0, 3);
+		glDrawArrays(GL_POINTS, 0, world.getTrueCount());
 
 		glfwPollEvents();		
 		glfwSwapBuffers(window);
