@@ -13,6 +13,24 @@ auto circleFunctionCreator(float r, float cx =0, float cy=0, float cz=0)
 	};
 }
 
+auto thorus(float innerR, float outerR, float cx=0, float cy=0, float cz = 0)
+{
+
+	return[innerR, outerR, cx, cy, cz](int x, int y, int z) -> bool
+	{
+		x = x - cx;
+		y = y - cy;
+		z = z - cz;
+		
+		float r = sqrt(x*x + z*z);
+
+		return(r > innerR && r < outerR);
+		
+		
+
+	};
+}
+
 struct World3d
 {
 	struct Vec3

@@ -2,10 +2,10 @@
 
 #define PI 3.141592
 #define PRECISION 0.4
-#define SIZE 0.1
+#define SIZE 0.05
 
 layout(points) in;
-layout(line_strip, max_vertices = 30) out;
+layout(triangle_strip, max_vertices = 30) out;
 
 void main() {    
 

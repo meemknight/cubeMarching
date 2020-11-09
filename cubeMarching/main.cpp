@@ -15,7 +15,6 @@
 int main()
 {
 
-
 	if(glfwInit() == false)
 	{
 		std::cout << "glfwerror";
@@ -41,7 +40,7 @@ int main()
 	World3d world;
 	world.scale = 1;
 	world.create(150, 150, 150);
-	world.popultate(circleFunctionCreator(10, 70, 70, 70));
+	world.popultate(thorus(4,10, 70, 70, 70));
 	world.calculateGpuData();
 	world.bind();
 
@@ -108,6 +107,13 @@ int main()
 		glfwPollEvents();		
 		glfwSwapBuffers(window);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+		{
+			int w = 0, h = 0;
+			glfwGetWindowSize(window, &w, &h);
+
+			glViewport(0, 0, w, h);
+		}
 	}
 
 	glfwTerminate();
